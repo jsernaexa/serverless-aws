@@ -18,7 +18,7 @@ public class FunctionAsignaciones
 
     public FunctionAsignaciones()
     {
-        var credentials = new BasicAWSCredentials("AKIAXRFIHH2TJDBPOX6Z", "fZQALZscyKcaCcvG3V971qcCmHYJOHYxVmFPyhtU");
+        var credentials = new BasicAWSCredentials("", "");
         _sqsClient = new AmazonSQSClient(credentials, Amazon.RegionEndpoint.USEast1);
         _dynamoDbContext = new DynamoDBContext(new AmazonDynamoDBClient());
     }

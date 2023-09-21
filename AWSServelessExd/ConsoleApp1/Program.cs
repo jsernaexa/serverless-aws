@@ -7,7 +7,7 @@ using System.Text.Json;
 Console.WriteLine("Hello, World!");
 
 AmazonSQSClient _sqsClient;
-var credentials = new BasicAWSCredentials("AKIAXRFIHH2TJDBPOX6Z", "fZQALZscyKcaCcvG3V971qcCmHYJOHYxVmFPyhtU");
+var credentials = new BasicAWSCredentials("", "");
 _sqsClient = new AmazonSQSClient(credentials, Amazon.RegionEndpoint.USEast1);
 
 var request = new SendMessageRequest()
