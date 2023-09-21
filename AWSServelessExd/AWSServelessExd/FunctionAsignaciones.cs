@@ -24,13 +24,13 @@ public class FunctionAsignaciones
     {
         context.Logger.LogInformation($"Validando perro: {JsonSerializer.Serialize(perro)}");
         var perroDb = await _dynamoDbContext.LoadAsync<Perro>(hashKey: perro.Raza, rangeKey: perro.Nombre);
-        if(perroDb != null )
+        if(perroDb == null )
         {
-            context.Logger.LogInformation($"Buscando Paseador para: {JsonSerializer.Serialize(perro)}");
-            var paseadores = await _dynamoDbContext.QueryAsync<Paseador>(perro.Ciudad).GetRemainingAsync();
-            context.Logger.LogInformation($"Paseadores disponibles en la ciudad de {perro.Ciudad} => {JsonSerializer.Serialize(paseadores)}");
+            throw new Exception("El perro no existe!!!");
         }
 
-        throw new Exception("El perro no existe!!!");
+        context.Logger.LogInformation($"Buscando Paseador para: {JsonSerializer.Serialize(perro)}");
+        var paseadores = await _dynamoDbContext.QueryAsync<Paseador>(perro.Ciudad).GetRemainingAsync();
+        context.Logger.LogInformation($"Paseadores disponibles en la ciudad de {perro.Ciudad} => {JsonSerializer.Serialize(paseadores)}");
     }
 }

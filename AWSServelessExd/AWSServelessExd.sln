@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogServices", "AWSServelessExd\DogServices.csproj", "{BF996C25-CFF2-4A8F-92A3-38CDE6F26AC9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "paseo-sqs-processor", "paseo-sqs-processor\paseo-sqs-processor.csproj", "{91E0F5B1-5668-456F-B3D6-61BFA5F98218}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BF996C25-CFF2-4A8F-92A3-38CDE6F26AC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF996C25-CFF2-4A8F-92A3-38CDE6F26AC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF996C25-CFF2-4A8F-92A3-38CDE6F26AC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E0F5B1-5668-456F-B3D6-61BFA5F98218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E0F5B1-5668-456F-B3D6-61BFA5F98218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E0F5B1-5668-456F-B3D6-61BFA5F98218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E0F5B1-5668-456F-B3D6-61BFA5F98218}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
