@@ -63,6 +63,76 @@
         "TableName": "Perro"
       }
     },
+    "AsignacionesApiLambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        ],
+        "Policies": [
+          {
+            "PolicyName": "AsignacionApiDynamoDBAccessPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Attributes",
+                    "dynamodb:LeadingKeys",
+                    "dynamodb:ReturnConsumedCapacity",
+                    "dynamodb:Select",
+                    "dynamodb:ReturnValues",
+                    "dynamodb:EnclosingOperation",
+                    "dynamodb:DescribeTable",
+                    "dynamodb:GetItem",
+                    "dynamodb:Query"
+                  ],
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "TablaPaseadores",
+                      "Arn"
+                    ]
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Attributes",
+                    "dynamodb:LeadingKeys",
+                    "dynamodb:ReturnConsumedCapacity",
+                    "dynamodb:Select",
+                    "dynamodb:ReturnValues",
+                    "dynamodb:EnclosingOperation",
+                    "dynamodb:DescribeTable",
+                    "dynamodb:GetItem",
+                    "dynamodb:Query"
+                  ],
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "TablaPerros",
+                      "Arn"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
     "PaseadoresApiLambdaExecutionRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -394,6 +464,38 @@
             "Properties": {
               "Path": "/paseador/{ciudad}/{nombre}",
               "Method": "DELETE"
+            }
+          }
+        }
+      }
+    },
+    "DogServicesFunctionAsignacionesPasearAleatorioGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootPost"
+        ]
+      },
+      "Properties": {
+        "Runtime": "dotnet6",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::GetAtt": [
+            "AsignacionesApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "PackageType": "Zip",
+        "Handler": "DogServices::DogServices.FunctionAsignaciones_PasearAleatorio_Generated::PasearAleatorio",
+        "Events": {
+          "RootPost": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/paseo/aleatorio",
+              "Method": "POST"
             }
           }
         }

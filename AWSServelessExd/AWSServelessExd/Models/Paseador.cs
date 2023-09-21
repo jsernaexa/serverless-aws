@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Amazon.DynamoDBv2.DataModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace DogServices.Models
     {
         public string? Nombre { get; set; }
         public int Edad { get; set; }
+
+        [DynamoDBHashKey]
         public string? Ciudad { get; set; }
         public string? Id { get; set; }
     }
