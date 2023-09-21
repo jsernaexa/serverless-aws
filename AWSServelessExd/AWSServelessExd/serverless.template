@@ -3,7 +3,147 @@
   "Transform": "AWS::Serverless-2016-10-31",
   "Description": "This template is partially managed by Amazon.Lambda.Annotations (v1.0.0.0).",
   "Resources": {
-    "DogServicesFunctionPostOrderGenerated": {
+    "TablaPaseadores": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "Ciudad",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "Nombre",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "Ciudad",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "Nombre",
+            "KeyType": "RANGE"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        },
+        "TableName": "Paseador"
+      }
+    },
+    "TablaPerros": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "Raza",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "Nombre",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "Raza",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "Nombre",
+            "KeyType": "RANGE"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        },
+        "TableName": "Perro"
+      }
+    },
+    "PaseadoresApiLambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        ],
+        "Policies": [
+          {
+            "PolicyName": "PaseadorApiDynamoDBAccessPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "dynamodb:*",
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "TablaPaseadores",
+                      "Arn"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "PerrosApiLambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        ],
+        "Policies": [
+          {
+            "PolicyName": "PerroApiDynamoDBAccessPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "dynamodb:*",
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "TablaPerros",
+                      "Arn"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "DogServicesFunctionPerrosPostPerroGenerated": {
       "Type": "AWS::Serverless::Function",
       "Metadata": {
         "Tool": "Amazon.Lambda.Annotations",
@@ -16,17 +156,244 @@
         "CodeUri": ".",
         "MemorySize": 256,
         "Timeout": 30,
-        "Policies": [
-          "AWSLambdaBasicExecutionRole"
-        ],
+        "Role": {
+          "Fn::GetAtt": [
+            "PerrosApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
         "PackageType": "Zip",
-        "Handler": "DogServices::DogServices.Function_PostOrder_Generated::PostOrder",
+        "Handler": "DogServices::DogServices.FunctionPerros_PostPerro_Generated::PostPerro",
         "Events": {
           "RootPost": {
             "Type": "HttpApi",
             "Properties": {
               "Path": "/perro",
               "Method": "POST"
+            }
+          }
+        }
+      }
+    },
+    "DogServicesFunctionPerrosGetPerroGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootGet"
+        ]
+      },
+      "Properties": {
+        "Runtime": "dotnet6",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::GetAtt": [
+            "PerrosApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "PackageType": "Zip",
+        "Handler": "DogServices::DogServices.FunctionPerros_GetPerro_Generated::GetPerro",
+        "Events": {
+          "RootGet": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/perro/{raza}/{nombre}",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+    "DogServicesFunctionPerrosGetPerrosGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootGet"
+        ]
+      },
+      "Properties": {
+        "Runtime": "dotnet6",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::GetAtt": [
+            "PerrosApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "PackageType": "Zip",
+        "Handler": "DogServices::DogServices.FunctionPerros_GetPerros_Generated::GetPerros",
+        "Events": {
+          "RootGet": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/perro/{raza}",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+    "DogServicesFunctionPerrosDeletePerroGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootDelete"
+        ]
+      },
+      "Properties": {
+        "Runtime": "dotnet6",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::GetAtt": [
+            "PerrosApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "PackageType": "Zip",
+        "Handler": "DogServices::DogServices.FunctionPerros_DeletePerro_Generated::DeletePerro",
+        "Events": {
+          "RootDelete": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/perro/{raza}/{nombre}",
+              "Method": "DELETE"
+            }
+          }
+        }
+      }
+    },
+    "DogServicesFunctionPaseadoresPostPaseadorGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootPost"
+        ]
+      },
+      "Properties": {
+        "Runtime": "dotnet6",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::GetAtt": [
+            "PaseadoresApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "PackageType": "Zip",
+        "Handler": "DogServices::DogServices.FunctionPaseadores_PostPaseador_Generated::PostPaseador",
+        "Events": {
+          "RootPost": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/paseador",
+              "Method": "POST"
+            }
+          }
+        }
+      }
+    },
+    "DogServicesFunctionPaseadoresGetPaseadorGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootGet"
+        ]
+      },
+      "Properties": {
+        "Runtime": "dotnet6",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::GetAtt": [
+            "PaseadoresApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "PackageType": "Zip",
+        "Handler": "DogServices::DogServices.FunctionPaseadores_GetPaseador_Generated::GetPaseador",
+        "Events": {
+          "RootGet": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/paseador/{ciudad}/{nombre}",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+    "DogServicesFunctionPaseadoresGetPaseadoresGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootGet"
+        ]
+      },
+      "Properties": {
+        "Runtime": "dotnet6",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::GetAtt": [
+            "PaseadoresApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "PackageType": "Zip",
+        "Handler": "DogServices::DogServices.FunctionPaseadores_GetPaseadores_Generated::GetPaseadores",
+        "Events": {
+          "RootGet": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/paseador/{ciudad}",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+    "DogServicesFunctionPaseadoresDeletePaseadorGenerated": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootDelete"
+        ]
+      },
+      "Properties": {
+        "Runtime": "dotnet6",
+        "CodeUri": ".",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::GetAtt": [
+            "PaseadoresApiLambdaExecutionRole",
+            "Arn"
+          ]
+        },
+        "PackageType": "Zip",
+        "Handler": "DogServices::DogServices.FunctionPaseadores_DeletePaseador_Generated::DeletePaseador",
+        "Events": {
+          "RootDelete": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/paseador/{ciudad}/{nombre}",
+              "Method": "DELETE"
             }
           }
         }
