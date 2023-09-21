@@ -9,6 +9,6 @@ namespace DogServices.Models
     public class Asignacion
     {
         public Paseador? Paseador { get; set; }
-        public List<Perro>? Perros { get; set; }
+        public Perro? Perro { get; set; }
     }
 }
