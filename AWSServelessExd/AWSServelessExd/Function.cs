@@ -1,21 +1,30 @@
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.Annotations.APIGateway;
+using DogServices.Models;
+using Amazon.Lambda.Annotations;
+using System.Text.Json;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace AWSServelessExd;
+namespace DogServices;
 
 public class Function
 {
-    
-    /// <summary>
-    /// A simple function that takes a string and does a ToUpper
-    /// </summary>
-    /// <param name="input"></param>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    public string FunctionHandler(string input, ILambdaContext context)
+    private readonly DynamoDBContext _dynamoDbContext;
+
+    public Function()
     {
-        return input.ToUpper();
+        _dynamoDbContext = new DynamoDBContext(new AmazonDynamoDBClient());
+    }
+
+    [LambdaFunction]
+    [HttpApi(LambdaHttpMethod.Post, "/perro")]
+    public Task PostOrder([FromBody]Perro perro, ILambdaContext context)
+    {
+        context.Logger.LogInformation($"Received: {JsonSerializer.Serialize(perro)}");
+        return Task.CompletedTask;
     }
 }

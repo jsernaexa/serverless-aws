@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSServelessExd", "AWSServelessExd\AWSServelessExd.csproj", "{BF996C25-CFF2-4A8F-92A3-38CDE6F26AC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogServices", "AWSServelessExd\DogServices.csproj", "{BF996C25-CFF2-4A8F-92A3-38CDE6F26AC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
